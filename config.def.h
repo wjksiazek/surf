@@ -119,6 +119,13 @@ static WebKitFindOptions findopts = WEBKIT_FIND_OPTIONS_CASE_INSENSITIVE |
         } \
 }
 
+static SearchEngine searchengines[] = {
+	{ "s",   "https://www.startpage.com/do/dsearch?query=%s"   },
+	{ "wf", "https://www.wolframalpha.com/input/?i=%s" },
+	{ "wiki", "https://en.wikipedia.org/w/index.php?search=%s"},
+	{ "yt", "https://www.youtube.com/results?search_query=%s"},
+};
+
 /* styles */
 /*
  * The iteration will stop at the first match, beginning at the beginning of
