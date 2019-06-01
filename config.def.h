@@ -6,7 +6,9 @@ static char *certdir        = "~/.surf/certificates/";
 static char *cachedir       = "~/.surf/cache/";
 static char *cookiefile     = "~/.surf/cookies.txt";
 static char *scriptfiles[]  = {
-	"~/.surf/script.js",
+	"~/.surf/scripts/link_hints.js",
+	"~/.surf/scripts/simplyread-0.8/simplyread.js",
+	"~/.surf/scripts/simplyread-0.8/keybind.js",
 };
 
 /* Webkit default features */
@@ -64,7 +66,7 @@ static int winsize[] = { 800, 600 };
 
 static WebKitFindOptions findopts = WEBKIT_FIND_OPTIONS_CASE_INSENSITIVE |
                                     WEBKIT_FIND_OPTIONS_WRAP_AROUND;
-
+#define HIST "~/.surf/history.html"
 #define PROMPT_GO   "Go:"
 #define PROMPT_FIND "Find:"
 
@@ -145,7 +147,7 @@ static SiteSpecific certs[] = {
  */
 static Key keys[] = {
 	/* modifier              keyval          function    arg */
-        { 0,                     GDK_KEY_g,      spawn,      GOTO },
+        { 0,                     GDK_KEY_o,      spawn,      GOTO },
 	{ 0,                     GDK_KEY_slash,  spawn,      SETPROP("_SURF_FIND", "_SURF_FIND", PROMPT_FIND) },
 
 	{ 0,                     GDK_KEY_i,      insert,     { .i = 1 } },
@@ -153,11 +155,13 @@ static Key keys[] = {
 
 	{ 0,                     GDK_KEY_c,      stop,       { 0 } },
 
-	{ MODKEY,                GDK_KEY_r,      reload,     { .i = 1 } },
 	{ 0,                     GDK_KEY_r,      reload,     { .i = 0 } },
 
 	{ 0,                     GDK_KEY_l,      navigate,   { .i = +1 } },
 	{ 0,                     GDK_KEY_h,      navigate,   { .i = -1 } },
+	{ 0, 			 GDK_grave,      navigate,   { .i = -1 } },
+	{ 0,                     GDK_F5,         reload,     { .b = TRUE } },
+	{ 0|GDK_SHIFT_MASK,   	 GDK_KEY_h, 	 loaduri,    { .v = HIST } },
 
 	/* vertical and horizontal scrolling, in viewport percentage */
 	{ 0,                     GDK_KEY_j,      scrollv,    { .i = +10 } },
@@ -189,7 +193,7 @@ static Key keys[] = {
 	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_o,      toggleinspector, { 0 } },
 
 	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_c,      toggle,     { .i = CaretBrowsing } },
-	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_f,      toggle,     { .i = FrameFlattening } },
+//	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_f,      toggle,     { .i = FrameFlattening } },
 	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_g,      toggle,     { .i = Geolocation } },
 	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_s,      toggle,     { .i = JavaScript } },
 	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_i,      toggle,     { .i = LoadImages } },
