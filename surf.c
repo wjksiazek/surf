@@ -129,6 +129,11 @@ typedef struct {
 } Button;
 
 typedef struct {
+	char *token;
+	char *uri;
+} SearchEngine;
+
+typedef struct {
 	const char *uri;
 	Parameter config[ParameterLast];
 	regex_t re;
@@ -214,6 +219,7 @@ static void webprocessterminated(WebKitWebView *v,
                                  Client *c);
 static void closeview(WebKitWebView *v, Client *c);
 static void destroywin(GtkWidget* w, Client *c);
+static gchar *parseuri(const gchar *uri);
 
 /* Hotkeys */
 static void pasteuri(GtkClipboard *clipboard, const char *text, gpointer d);
@@ -559,7 +565,7 @@ loaduri(Client *c, const Arg *a)
 			url = g_strdup_printf("file://%s", path);
 			free(path);
 		} else {
-			url = g_strdup_printf("http://%s", uri);
+			url = parseuri(uri);
 		}
 		if (apath != uri)
 			free(apath);
@@ -1763,6 +1769,49 @@ destroywin(GtkWidget* w, Client *c)
 	destroyclient(c);
 	if (!clients)
 		gtk_main_quit();
+}
+
+/* Converts an integer value to its hex character*/
+char
+to_hex(char code) 
+{
+	  static char hex[] = "0123456789abcdef";
+	    return hex[code & 15];
+}
+
+/* Returns a url-encoded version of str */
+/* IMPORTANT: be sure to free() the returned string after use */
+char
+*url_encode(char *str) 
+{
+  char *pstr = str, *buf = malloc(strlen(str) * 3 + 1), *pbuf = buf;
+  while (*pstr) {
+	  if (isalnum(*pstr) || *pstr == '-' || *pstr == '_' || *pstr == '.' || *pstr == '~') 
+		  *pbuf++ = *pstr;
+	  else if (*pstr == ' ') 
+		  *pbuf++ = '+';
+	  else 
+		  *pbuf++ = '%', *pbuf++ = to_hex(*pstr >> 4), *pbuf++ = to_hex(*pstr & 15);
+	  pstr++;
+}
+	      *pbuf = '\0';
+	   return buf;
+}
+
+gchar *
+parseuri(const gchar *uri) {
+	guint i;
+
+	for (i = 0; i < LENGTH(searchengines); i++) {
+		if (searchengines[i].token == NULL || searchengines[i].uri == NULL ||
+		    *(uri + strlen(searchengines[i].token)) != ' ')
+			continue;
+		if (g_str_has_prefix(uri, searchengines[i].token))
+			return g_strdup_printf(searchengines[i].uri,
+					       url_encode(uri + strlen(searchengines[i].token) + 1));
+	}
+
+	return g_strdup_printf("http://%s", uri);
 }
 
 void
