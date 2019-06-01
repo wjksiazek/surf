@@ -159,8 +159,8 @@ static Key keys[] = {
 
 	{ 0,                     GDK_KEY_l,      navigate,   { .i = +1 } },
 	{ 0,                     GDK_KEY_h,      navigate,   { .i = -1 } },
-	{ 0, 			 GDK_grave,      navigate,   { .i = -1 } },
-	{ 0,                     GDK_F5,         reload,     { .b = TRUE } },
+	{ 0, 			 GDK_KEY_grave,  navigate,   { .i = -1 } },
+	{ 0,                     GDK_KEY_F5,     reload,     { .i = 0 } },
 	{ 0|GDK_SHIFT_MASK,   	 GDK_KEY_h, 	 loaduri,    { .v = HIST } },
 
 	/* vertical and horizontal scrolling, in viewport percentage */
