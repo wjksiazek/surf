@@ -68,6 +68,19 @@ static WebKitFindOptions findopts = WEBKIT_FIND_OPTIONS_CASE_INSENSITIVE |
 #define PROMPT_GO   "Go:"
 #define PROMPT_FIND "Find:"
 
+#define ONLOAD(u) { \
+	.v = (char *[]){"/bin/sh", "-c", \
+		"~/.surf/omnibar addhist \"$0\"", u, NULL \
+	} \
+}
+
+#define GOTO { \
+	.v = (char *[]){"/bin/sh", "-c", \
+		"~/.surf/omnibar goto \"$0\" \"$1\"", winid, "_SURF_GO", NULL \
+	} \
+}
+
+
 /* SETPROP(readprop, setprop, prompt)*/
 #define SETPROP(r, s, p) { \
         .v = (const char *[]){ "/bin/sh", "-c", \
@@ -132,8 +145,7 @@ static SiteSpecific certs[] = {
  */
 static Key keys[] = {
 	/* modifier              keyval          function    arg */
-	{ 0,                     GDK_KEY_g,      spawn,      SETPROP("_SURF_URI", "_SURF_GO", PROMPT_GO) },
-	{ 0,                     GDK_KEY_f,      spawn,      SETPROP("_SURF_FIND", "_SURF_FIND", PROMPT_FIND) },
+        { 0,                     GDK_KEY_g,      spawn,      GOTO },
 	{ 0,                     GDK_KEY_slash,  spawn,      SETPROP("_SURF_FIND", "_SURF_FIND", PROMPT_FIND) },
 
 	{ 0,                     GDK_KEY_i,      insert,     { .i = 1 } },
