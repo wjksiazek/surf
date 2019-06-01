@@ -1,0 +1,9 @@
+common.o
+config.h
+libsurf-webext.o
+libsurf-webext.so
+surf
+surf-0.6-smoothscrolling.diff
+surf-0.7-smoothscrolling.diff
+surf.o
+
