@@ -55,10 +55,10 @@ static Parameter defconfig[ParameterLast] = {
 };
 
 static UriParameters uriparams[] = {
-	{ "(://|\\.)suckless\\.org(/|$)", {
-	  [JavaScript] = { { .i = 0 }, 1 },
-	  [Plugins]    = { { .i = 0 }, 1 },
-	}, },
+//	{ "(://|\\.)suckless\\.org(/|$)", {
+//	  [JavaScript] = { { .i = 0 }, 1 },
+//	  [Plugins]    = { { .i = 0 }, 1 },
+//	}, },
 };
 
 /* default window size: width, height */
@@ -87,10 +87,16 @@ static WebKitFindOptions findopts = WEBKIT_FIND_OPTIONS_CASE_INSENSITIVE |
 #define SETPROP(r, s, p) { \
         .v = (const char *[]){ "/bin/sh", "-c", \
              "prop=\"$(printf '%b' \"$(xprop -id $1 $2 " \
+             "| sed \"s/^$2(STRING) = //;s/^\\\"\\(.*\\)\\\"$/\\1/\" && cat ~/.surf/bookmarks)\" " \
+             "| dmenu -l 10 -p \"$4\" -w $1)\" && " \
+             "xprop -id $1 -f $3 8s -set $3 \"$prop\"", \
+             "surf-setprop", winid, r, s, p, NULL \
+        } \
+}
 
 /* DOWNLOAD(URI, referer) */
 #define DOWNLOAD(u, r) { \
-        .v = (const char *[]){ "$TERM", "-e", "/bin/sh", "-c",\
+        .v = (const char *[]){ "st", "-e", "/bin/sh", "-c",\
              "curl -g -L -J -O -A \"$1\" -b \"$2\" -c \"$2\"" \
              " -e \"$3\" \"$4\"; read", \
              "surf-download", useragent, cookiefile, r, u, NULL \
@@ -128,6 +134,22 @@ static SearchEngine searchengines[] = {
 	{ "pocket", "https://getpocket.com/edit.php?url=%s" },
 };
 
+/* BM_ADD(readprop) */
+#define BM_ADD(r) {\
+        .v = (const char *[]){ "/bin/sh", "-c", \
+             "(echo $(xprop -id $0 $1) | cut -d '\"' -f2 " \
+             "| sed 's/.*https*:\\/\\/\\(www\\.\\)\\?//' && cat ~/.surf/bookmarks) " \
+             "| awk '!seen[$0]++' > ~/.surf/bookmarks.tmp && " \
+             "mv ~/.surf/bookmarks.tmp ~/.surf/bookmarks", \
+             winid, r, NULL \
+        } \
+}
+
+#define BM_PICK { .v = (char *[]){ "/bin/sh", "-c", \
+	"xprop -id $0 -f _SURF_GO 8s -set _SURF_GO \
+	`cat ~/.surf/bookmarks | dmenu -l 10 || exit 0`", \
+	winid, NULL } }
+
 /* styles */
 /*
  * The iteration will stop at the first match, beginning at the beginning of
@@ -135,7 +157,7 @@ static SearchEngine searchengines[] = {
  */
 static SiteSpecific styles[] = {
 	/* regexp               file in $styledir */
-	{ ".*",                 "default.css" },
+//	{ ".*",                 "default.css" },
 };
 
 /* certificates */
@@ -171,7 +193,9 @@ static Key keys[] = {
 	{ 0, 			 GDK_KEY_grave,  navigate,   { .i = -1 } },
 	{ 0,                     GDK_KEY_F5,     reload,     { .i = 0 } },
 	{ 0|GDK_SHIFT_MASK,   	 GDK_KEY_h, 	 loaduri,    { .v = HIST } },
-	{ 0,                     GDK_KEY_s,      loaduri,     { .v = POCKET } },
+//	{ 0,                     GDK_KEY_s,      loaduri,     { .v = POCKET } },
+	{ MODKEY,                GDK_KEY_b,      spawn,       BM_PICK  },
+	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_b,      spawn,       BM_ADD("_SURF_URI")},
 
 	/* vertical and horizontal scrolling, in viewport percentage */
 	{ 0,                     GDK_KEY_j,      scrollv,    { .i = +10 } },
@@ -208,7 +232,7 @@ static Key keys[] = {
 	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_s,      toggle,     { .i = JavaScript } },
 	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_i,      toggle,     { .i = LoadImages } },
 	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_v,      toggle,     { .i = Plugins } },
-	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_b,      toggle,     { .i = ScrollBars } },
+	//{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_b,      toggle,     { .i = ScrollBars } },
 	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_t,      toggle,     { .i = StrictTLS } },
 	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_m,      toggle,     { .i = Style } },
 };
