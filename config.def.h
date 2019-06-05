@@ -29,7 +29,7 @@ static Parameter defconfig[ParameterLast] = {
 	[DiskCache]           =       { { .i = 1 },     },
 	[DNSPrefetch]         =       { { .i = 0 },     },
 	[FileURLsCrossAccess] =       { { .i = 0 },     },
-	[FontSize]            =       { { .i = 12 },    },
+	[FontSize]            =       { { .i = 16 },    },
 	[FrameFlattening]     =       { { .i = 0 },     },
 	[Geolocation]         =       { { .i = 0 },     },
 	[HideBackground]      =       { { .i = 0 },     },
@@ -87,15 +87,10 @@ static WebKitFindOptions findopts = WEBKIT_FIND_OPTIONS_CASE_INSENSITIVE |
 #define SETPROP(r, s, p) { \
         .v = (const char *[]){ "/bin/sh", "-c", \
              "prop=\"$(printf '%b' \"$(xprop -id $1 $2 " \
-             "| sed \"s/^$2(STRING) = //;s/^\\\"\\(.*\\)\\\"$/\\1/\")\" " \
-             "| dmenu -p \"$4\" -w $1)\" && xprop -id $1 -f $3 8s -set $3 \"$prop\"", \
-             "surf-setprop", winid, r, s, p, NULL \
-        } \
-}
 
 /* DOWNLOAD(URI, referer) */
 #define DOWNLOAD(u, r) { \
-        .v = (const char *[]){ "st", "-e", "/bin/sh", "-c",\
+        .v = (const char *[]){ "$TERM", "-e", "/bin/sh", "-c",\
              "curl -g -L -J -O -A \"$1\" -b \"$2\" -c \"$2\"" \
              " -e \"$3\" \"$4\"; read", \
              "surf-download", useragent, cookiefile, r, u, NULL \
@@ -119,11 +114,18 @@ static WebKitFindOptions findopts = WEBKIT_FIND_OPTIONS_CASE_INSENSITIVE |
         } \
 }
 
+#define POCKET {\
+         (const char *[]){ "/bin/sh", "-c", "~/.surf/savetopocket \"$0\" \"$1\"", winid, "_SURF_GO", NULL \
+	 }\
+}
+
+
 static SearchEngine searchengines[] = {
 	{ "s",   "https://www.startpage.com/do/dsearch?query=%s"   },
 	{ "wf", "https://www.wolframalpha.com/input/?i=%s" },
 	{ "wiki", "https://en.wikipedia.org/w/index.php?search=%s"},
 	{ "yt", "https://www.youtube.com/results?search_query=%s"},
+	{ "pocket", "https://getpocket.com/edit.php?url=%s" },
 };
 
 /* styles */
@@ -169,6 +171,7 @@ static Key keys[] = {
 	{ 0, 			 GDK_KEY_grave,  navigate,   { .i = -1 } },
 	{ 0,                     GDK_KEY_F5,     reload,     { .i = 0 } },
 	{ 0|GDK_SHIFT_MASK,   	 GDK_KEY_h, 	 loaduri,    { .v = HIST } },
+	{ 0,                     GDK_KEY_s,      loaduri,     { .v = POCKET } },
 
 	/* vertical and horizontal scrolling, in viewport percentage */
 	{ 0,                     GDK_KEY_j,      scrollv,    { .i = +10 } },
