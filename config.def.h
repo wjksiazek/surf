@@ -82,6 +82,11 @@ static WebKitFindOptions findopts = WEBKIT_FIND_OPTIONS_CASE_INSENSITIVE |
 	} \
 }
 
+#define POCKET {\
+	.v = (char *[]){"/bin/sh", "-c", \
+		"~/.surf/omnibar pocket \"$0\" \"$1\"", winid, "_SURF_GO", NULL \
+	} \
+}
 
 /* SETPROP(readprop, setprop, prompt)*/
 #define SETPROP(r, s, p) { \
@@ -120,10 +125,6 @@ static WebKitFindOptions findopts = WEBKIT_FIND_OPTIONS_CASE_INSENSITIVE |
         } \
 }
 
-#define POCKET {\
-         (const char *[]){ "/bin/sh", "-c", "~/.surf/savetopocket \"$0\" \"$1\"", winid, "_SURF_GO", NULL \
-	 }\
-}
 
 
 static SearchEngine searchengines[] = {
@@ -193,9 +194,9 @@ static Key keys[] = {
 	{ 0, 			 GDK_KEY_grave,  navigate,   { .i = -1 } },
 	{ 0,                     GDK_KEY_F5,     reload,     { .i = 0 } },
 	{ 0|GDK_SHIFT_MASK,   	 GDK_KEY_h, 	 loaduri,    { .v = HIST } },
-//	{ 0,                     GDK_KEY_s,      loaduri,     { .v = POCKET } },
-	{ MODKEY,                GDK_KEY_b,      spawn,       BM_PICK  },
-	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_b,      spawn,       BM_ADD("_SURF_URI")},
+	{ 0,                     GDK_KEY_s,      spawn,       POCKET  },
+	{ 0,                     GDK_KEY_b,      spawn,       BM_PICK  },
+	{ 0|GDK_SHIFT_MASK|GDK_CONTROL_MASK, GDK_KEY_b,      spawn,       BM_ADD("_SURF_URI")},
 
 	/* vertical and horizontal scrolling, in viewport percentage */
 	{ 0,                     GDK_KEY_j,      scrollv,    { .i = +10 } },
@@ -241,9 +242,9 @@ static Key keys[] = {
 /* target can be OnDoc, OnLink, OnImg, OnMedia, OnEdit, OnBar, OnSel, OnAny */
 static Button buttons[] = {
 	/* target       event mask      button  function        argument        stop event */
-	{ OnLink,       0,              2,      clicknewwindow, { .i = 0 },     1 },
+	{ OnLink,       0,              2,      clicknewwindow, { .i = 1 },     1 },
 	{ OnLink,       MODKEY,         2,      clicknewwindow, { .i = 1 },     1 },
-	{ OnLink,       MODKEY,         1,      clicknewwindow, { .i = 1 },     1 },
+	{ OnLink,       MODKEY,         1,      clicknewwindow, { .i = 0 },     1 },
 	{ OnAny,        0,              8,      clicknavigate,  { .i = -1 },    1 },
 	{ OnAny,        0,              9,      clicknavigate,  { .i = +1 },    1 },
 	{ OnMedia,      MODKEY,         1,      clickexternplayer, { 0 },       1 },
