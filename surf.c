@@ -240,7 +240,6 @@ static void toggleinspector(Client *c, const Arg *a);
 static void find(Client *c, const Arg *a);
 static void insert(Client *c, const Arg *a);
 static void externalpipe(Client *c, const Arg *a);
-static void savetopocket(Client *c, const Arg *a);
 
 /* Buttons */
 static void clicknavigate(Client *c, const Arg *a, WebKitHitTestResult *h);
@@ -385,16 +384,6 @@ externalpipe(Client *c, const Arg *arg)
 	}
 }
 
-void
-savetopocket(Client *c, const Arg *a)
-{
-	char *result = malloc(7 + strlen(c->targeturi) + 1); // +1 for the null-terminator
-	strcpy(result, "pocket ");
-	strcat(result, c->targeturi);
-	Arg b = { .v = result };
-	loaduri(c, &b);
-
-}
 
 void
 usage(void)
@@ -2025,6 +2014,7 @@ scrollh(Client *c, const Arg *a)
 {
 	msgext(c, 'h', a);
 }
+
 
 void
 navigate(Client *c, const Arg *a)

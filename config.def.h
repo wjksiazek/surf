@@ -9,6 +9,7 @@ static char *scriptfiles[]  = {
 	"~/.surf/scripts/link_hints.js",
 	"~/.surf/scripts/simplyread-0.8/simplyread.js",
 	"~/.surf/scripts/simplyread-0.8/keybind.js",
+	"~/.surf/scripts/easier_keys.js",
 };
 
 /* Webkit default features */
@@ -194,9 +195,9 @@ static Key keys[] = {
 	{ 0, 			 GDK_KEY_grave,  navigate,   { .i = -1 } },
 	{ 0,                     GDK_KEY_F5,     reload,     { .i = 0 } },
 	{ 0|GDK_SHIFT_MASK,   	 GDK_KEY_h, 	 loaduri,    { .v = HIST } },
-	{ 0,                     GDK_KEY_s,      spawn,       POCKET  },
+	{ MODKEY,                GDK_KEY_s,      spawn,       POCKET  },
 	{ 0,                     GDK_KEY_b,      spawn,       BM_PICK  },
-	{ 0|GDK_SHIFT_MASK|GDK_CONTROL_MASK, GDK_KEY_b,      spawn,       BM_ADD("_SURF_URI")},
+	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_b,      spawn,       BM_ADD("_SURF_URI")},
 
 	/* vertical and horizontal scrolling, in viewport percentage */
 	{ 0,                     GDK_KEY_j,      scrollv,    { .i = +10 } },
@@ -221,7 +222,7 @@ static Key keys[] = {
 	{ 0|GDK_SHIFT_MASK,      GDK_KEY_n,      find,       { .i = -1 } },
 
 	{ MODKEY,                GDK_KEY_p,      print,      { 0 } },
-	{ MODKEY,                GDK_KEY_t,      showcert,   { 0 } },
+	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_c,      showcert,   { 0 } },
 
 	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_a,      togglecookiepolicy, { 0 } },
 	{ 0,                     GDK_KEY_F11,    togglefullscreen, { 0 } },
