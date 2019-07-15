@@ -1428,7 +1428,7 @@ winevent(GtkWidget *w, GdkEvent *e, Client *c)
 		    !insertmode ||
 		    CLEANMASK(e->key.state) == (MODKEY|GDK_SHIFT_MASK) ||
 		    CLEANMASK(e->key.state) == (MODKEY) ||
-		    gdk_keyval_to_lower(e->key.keyval) == (GDK_KEY_Escape)) {
+		    (gdk_keyval_to_lower(e->key.keyval) == (GDK_KEY_Escape)) && CLEANMASK(e->key.state) == (GDK_SHIFT_MASK)) {
 			for (i = 0; i < LENGTH(keys); ++i) {
 				if (gdk_keyval_to_lower(e->key.keyval) ==
 				    keys[i].keyval &&
@@ -1439,6 +1439,9 @@ winevent(GtkWidget *w, GdkEvent *e, Client *c)
 					return TRUE;
 				}
 			}
+		}
+		if(!insertmode) {
+			return TRUE;
 		}
 	case GDK_LEAVE_NOTIFY:
 		c->overtitle = NULL;

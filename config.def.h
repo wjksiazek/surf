@@ -181,7 +181,7 @@ static Key keys[] = {
 	{ 0,                     GDK_KEY_slash,  spawn,      SETPROP("_SURF_FIND", "_SURF_FIND", PROMPT_FIND) },
 
 	{ 0,                     GDK_KEY_i,      insert,     { .i = 1 } },
-	{ 0,                     GDK_KEY_Escape, insert,     { .i = 0 } },
+	{ 0|GDK_SHIFT_MASK,      GDK_KEY_Escape, insert,     { .i = 0 } },
 
 	{ 0,                     GDK_KEY_c,      stop,       { 0 } },
 
@@ -219,7 +219,7 @@ static Key keys[] = {
 	{ 0|GDK_SHIFT_MASK,      GDK_KEY_n,      find,       { .i = -1 } },
 
 	{ MODKEY,                GDK_KEY_p,      print,      { 0 } },
-	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_c,      showcert,   { 0 } },
+	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_t,      showcert,   { 0 } },
 
 	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_a,      togglecookiepolicy, { 0 } },
 	{ 0,                     GDK_KEY_F11,    togglefullscreen, { 0 } },
@@ -232,7 +232,7 @@ static Key keys[] = {
 	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_i,      toggle,     { .i = LoadImages } },
 	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_v,      toggle,     { .i = Plugins } },
 	//{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_b,      toggle,     { .i = ScrollBars } },
-	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_t,      toggle,     { .i = StrictTLS } },
+	//{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_t,      toggle,     { .i = StrictTLS } },
 	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_m,      toggle,     { .i = Style } },
 };
 
