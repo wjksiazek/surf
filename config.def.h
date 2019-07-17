@@ -9,7 +9,6 @@ static char *scriptfiles[]  = {
 	"~/.surf/scripts/link_hints.js",
 	"~/.surf/scripts/simplyread-0.8/simplyread.js",
 	"~/.surf/scripts/simplyread-0.8/keybind.js",
-	"~/.surf/scripts/easier_keys.js",
 };
 
 /* Webkit default features */
@@ -124,6 +123,9 @@ static WebKitFindOptions findopts = WEBKIT_FIND_OPTIONS_CASE_INSENSITIVE |
 }
 
 
+#define GO_HOME { .v = "window.scroll(0, 0);"}
+
+#define GO_END { .v = "window.scrollTo(0, document.body.scrollHeight);"}
 
 static SearchEngine searchengines[] = {
 	{ "s",   "https://www.startpage.com/do/dsearch?query=%s"   },
@@ -200,9 +202,10 @@ static Key keys[] = {
 	{ 0,                     GDK_KEY_j,      scrollv,    { .i = +10 } },
 	{ 0,                     GDK_KEY_k,      scrollv,    { .i = -10 } },
 	{ 0,                     GDK_KEY_space,  scrollv,    { .i = +50 } },
-	{ 0,                     GDK_KEY_b,      scrollv,    { .i = -50 } },
-	{ 0,                     GDK_KEY_i,      scrollh,    { .i = +10 } },
-	{ 0,                     GDK_KEY_u,      scrollh,    { .i = -10 } },
+	{ MODKEY,                GDK_KEY_l,      scrollh,    { .i = +10 } },
+	{ MODKEY,                GDK_KEY_h,      scrollh,    { .i = -10 } },
+	{ 0,                     GDK_KEY_g,      evaljs,      GO_HOME },
+	{ 0|GDK_SHIFT_MASK,      GDK_KEY_g,      evaljs,     GO_END},
 
 
 	{ 0|GDK_SHIFT_MASK,      GDK_KEY_j,      zoom,       { .i = -1 } },
@@ -246,4 +249,13 @@ static Button buttons[] = {
 	{ OnAny,        0,              8,      clicknavigate,  { .i = -1 },    1 },
 	{ OnAny,        0,              9,      clicknavigate,  { .i = +1 },    1 },
 	{ OnMedia,      MODKEY,         1,      clickexternplayer, { 0 },       1 },
+};
+
+static guint key_ignore[] = {
+	0xff54,
+	0xff52,
+	0xff53,
+	0xff51,
+	0xff57,
+	0xff50,
 };

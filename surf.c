@@ -173,6 +173,7 @@ static const char *getstyle(const char *uri);
 static void setstyle(Client *c, const char *file);
 static void runscript(Client *c);
 static void evalscript(Client *c, const char *jsstr, ...);
+static void evaljs(Client *c, Arg *a);
 static void updatewinid(Client *c);
 static void handleplumb(Client *c, const char *uri);
 static void newwindow(Client *c, const Arg *a, int noembed);
@@ -220,7 +221,7 @@ static void webprocessterminated(WebKitWebView *v,
                                  Client *c);
 static void closeview(WebKitWebView *v, Client *c);
 static void destroywin(GtkWidget* w, Client *c);
-static gchar *parseuri(const gchar *uri);
+static const gchar *parseuri(const gchar *uri);
 
 /* Hotkeys */
 static void pasteuri(GtkClipboard *clipboard, const char *text, gpointer d);
@@ -1053,6 +1054,13 @@ evalscript(Client *c, const char *jsstr, ...)
 }
 
 void
+evaljs(Client *c, Arg *a)
+{
+
+	evalscript(c, a->v);
+}
+
+void
 updatewinid(Client *c)
 {
 	snprintf(winid, LENGTH(winid), "%lu", c->xid);
@@ -1441,6 +1449,13 @@ winevent(GtkWidget *w, GdkEvent *e, Client *c)
 			}
 		}
 		if(!insertmode) {
+			if (CLEANMASK(e->key.state) == MODKEY) 
+				return FALSE;
+
+			for(i = 0; i < LENGTH(key_ignore); i++){
+				if (gdk_keyval_to_lower(e->key.keyval) == key_ignore[i] )
+					return FALSE;
+			}
 			return TRUE;
 		}
 	case GDK_LEAVE_NOTIFY:
@@ -1893,7 +1908,7 @@ url_encode(const gchar* str)
 	   return buf;
 }
 
-gchar *
+const gchar *
 parseuri(const gchar *uri) {
 	guint i;
 
